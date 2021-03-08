@@ -62,7 +62,7 @@ export default class signup extends Component {
         const {displayName, email, password, confirmPassword, errors } = this.state;
 
         return (
-            <div className="mt-20 p-3 m-auto w-11/12 md:w-6/12 2xl:w-3/12 border-gray-300 border rounded-sm">
+            <div className="mt-20 p-3 m-auto w-11/12 md:w-6/12 xl:w-5/12 2xl:w-3/12 border-gray-300 border rounded-sm">
                 <div className="text-center text-2xl">
                     <h2>
                         Register
