@@ -1,8 +1,11 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import Logo from '../assets/logo.png'
+import { auth } from '../firebase/utils.js'
 
-function header() {
+function header(props) {
+
+    const { currentUser } = props;
     return (
         <>
             <div className="relative bg-white">
@@ -148,14 +151,28 @@ function header() {
                         
                     </nav>
                     <div className="hidden md:flex items-center justify-end md:flex-1 lg:w-0">
-                        <a href="#" className="whitespace-nowrap text-base font-medium text-gray-500 hover:text-gray-900">
-                        Sign in
-                        </a>
-                        <Link to='/registration'>
-                            <a className="ml-8 whitespace-nowrap inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-sm shadow-sm text-base font-medium text-white bg-black hover:bg-gray-500">
-                            Sign up
-                            </a>
-                        </Link>
+                        {currentUser && (
+                            <>
+                                <div className="whitespace-nowrap text-base font-medium text-gray-500 hover:text-gray-900 cursor-pointer" onClick={() => auth.signOut()}>
+                                Sign Out
+                                </div>
+                            </>
+                        )}
+
+                        {!currentUser && (
+                            <>
+                                <Link to='/login'>
+                                    <div className="whitespace-nowrap text-base font-medium text-gray-500 hover:text-gray-900">
+                                    Sign in
+                                    </div>
+                                </Link>
+                                <Link to='/registration'>
+                                    <div className="ml-8 whitespace-nowrap inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-sm shadow-sm text-base font-medium text-white bg-black hover:bg-gray-500">
+                                    Sign up
+                                    </div>
+                                </Link>
+                            </>
+                        )}
                     </div>
                     </div>
                 </div>
@@ -283,6 +300,10 @@ function header() {
                 </div>
         </>
     )
-}
+};
+
+header.defaultProps = {
+    currentUser: null
+};
 
 export default header

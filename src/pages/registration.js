@@ -1,12 +1,9 @@
 import React, { Component } from 'react'
+import Signup from '../components/signup.js'
 
 export default class registration extends Component {
     render() {
-        return (
-            <div>
-                <h1>Registration</h1>
-            </div>
-        )
+        return <Signup />;
     }
 }
 

@@ -5,7 +5,7 @@ import Footer from '../components/footer.js'
 function mainLayout(props) {
     return (
         <div>
-            <Header />
+            <Header {...props}/>
             <div className="main h-screen">
                 {props.children}
             </div>
