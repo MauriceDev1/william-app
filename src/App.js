@@ -12,6 +12,7 @@ import MainLayout from './layouts/mainLayout.js'
 import Homepage from './pages/homepage.js'
 import Registration from './pages/registration.js'
 import Login from './pages/login'
+import Recovery from './pages/recovery.js'
 
 const initialState = {
   currentUser: null
@@ -73,6 +74,12 @@ class App extends Component {
                 <Login />
               </MainLayout>
             )} />
+            <Route path="/recovery" 
+              render={()=> (
+                <MainLayout>
+                  <Recovery />
+                </MainLayout>
+              )} />
         </Switch>
       </div>
     );

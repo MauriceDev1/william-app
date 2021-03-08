@@ -114,7 +114,7 @@ export default class signup extends Component {
                         />
 
                         <Button type="submit">
-                            Sign Up
+                            Register
                         </Button>
                     </form>
                 </div>

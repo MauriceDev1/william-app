@@ -3,6 +3,7 @@ import Button from './forms/Button.js'
 import { signInWithGoogle, auth } from '../firebase/utils.js'
 
 import FormInput from '../components/forms/FormInput.js'
+import { Link } from 'react-router-dom'
 
 const initialState = {
     email: '',
@@ -15,7 +16,7 @@ class signin extends Component {
         this.state = {
             ...initialState
         };
-        
+
         this.handelChange = this.handelChange.bind(this);
     }
 
@@ -79,6 +80,11 @@ class signin extends Component {
                             </div>
                         </div>
                     </form>
+                    <div className="mt-2">
+                        <Link to="/recovery">
+                            Reset Password
+                        </Link>
+                    </div>
                 </div>
             </div>
         )
