@@ -1,50 +1,33 @@
-import React, { Component } from 'react'
+import React, { useState } from 'react'
+import { Link, withRouter } from 'react-router-dom'
 import Button from './forms/Button.js'
 import { signInWithGoogle, auth } from '../firebase/utils.js'
 
 import FormInput from '../components/forms/FormInput.js'
-import { Link } from 'react-router-dom'
 
-const initialState = {
-    email: '',
-    password: ''
-}
 
-class signin extends Component {
-    constructor(props){
-        super(props);
-        this.state = {
-            ...initialState
-        };
+const Signin = props => {
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
 
-        this.handelChange = this.handelChange.bind(this);
+    const resetForm = () => {
+        setEmail('');
+        setPassword('');
     }
 
-    handelChange(e) {
-        const { name, value } = e.target;
-        this.setState({
-            [name]: value
-        });
-    }
-
-    handleSubmit = async e => {
+    const handleSubmit = async e => {
         e.preventDefault();
-        const { email, password} = this.state;
 
         try{
 
             await auth.signInWithEmailAndPassword(email,password);
-            this.setState({
-                ...initialState
-            });
+            resetForm();
+            props.history.push('/')
 
         }catch (err){
             //console.log(err);
         }
     }
-
-    render() {
-        const { email, password } = this.state;
 
         return (
             <div className="mt-20 p-3 m-auto w-11/12 md:w-6/12 xl:w-5/12 2xl:w-3/12 border-gray-300 border rounded-sm">
@@ -54,20 +37,20 @@ class signin extends Component {
                     </h2>
                 </div>
                 <div className="pt-4">
-                    <form onSubmit={this.handleSubmit}>
+                    <form onSubmit={handleSubmit}>
                         <FormInput 
                             type="email"
                             name="email"
                             value={email}
                             placeholder="email"
-                            handelChange={this.handelChange}
+                            handelChange={e => setEmail(e.target.value)}
                         />
                         <FormInput 
                             type="password"
                             name="password"
                             value={password}
                             placeholder="password"
-                            handelChange={this.handelChange}
+                            handelChange={e => setPassword(e.target.value)}
                         />
                         <Button type="submit">
                            LogIn
@@ -87,8 +70,7 @@ class signin extends Component {
                     </div>
                 </div>
             </div>
-        )
-    }
+        );
 }
 
-export default signin
+export default withRouter(Signin);

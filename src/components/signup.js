@@ -1,44 +1,32 @@
-import React, { Component } from 'react'
+import React, { useState } from 'react'
+import { withRouter } from 'react-router-dom'
 import FormInput from '../components/forms/FormInput.js'
 import Button from '../components/forms/Button.js'
 
 import { auth, handelUserProfile } from '../firebase/utils.js'
 
-const initialState = {
- displayName: '',
- email: '',
- password: '',
- confirmPassword: '',
- errors: []
-};
+const Signup = props => {
+    const [displayName, setDisplayName] = useState('');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
+    const [errors, setErrors] = useState('');
 
-export default class signup extends Component {
-    constructor(props){
-        super(props);
-        this.state = {
-            ...initialState
-        }
 
-        this.handelChange = this.handelChange.bind(this);
+    const reset = () => {
+        setDisplayName('');
+        setEmail('');
+        setPassword('');
+        setConfirmPassword('');
+        setErrors([]);
     }
 
-    handelChange(e) {
-        const { name, value } = e.target;
-
-        this.setState({
-            [name]: value
-        });
-    }
-
-    handleFormSubmit = async event => {
+    const handleFormSubmit = async event => {
         event.preventDefault();
-        const { displayName, email, password, confirmPassword } = this.state;
 
         if(password !== confirmPassword) {
             const err = ['Password Dont\'t match'];
-            this.setState({
-                errors: err
-            });
+            setErrors(err);
             return;
         }
 
@@ -47,19 +35,14 @@ export default class signup extends Component {
            const { user } = await auth.createUserWithEmailAndPassword(email, password);
 
            await handelUserProfile(user, { displayName });
-
-           this.setState({
-              ...initialState 
-           });
+           reset();
+           props.history.push('/');
 
         }catch (err) {
             // console.log(err);
         }
 
     }
-
-    render() {
-        const {displayName, email, password, confirmPassword, errors } = this.state;
 
         return (
             <div className="mt-20 p-3 m-auto w-11/12 md:w-6/12 xl:w-5/12 2xl:w-3/12 border-gray-300 border rounded-sm">
@@ -80,13 +63,13 @@ export default class signup extends Component {
                     </ul>
                 )}
                 <div className="pt-4">
-                    <form onSubmit={this.handleFormSubmit}>
+                    <form onSubmit={handleFormSubmit}>
                         <FormInput 
                             type="text"
                             name="displayName"
                             value={displayName}
                             placeholder="Full Name"
-                            onChange={this.handelChange}
+                            handelChange={e => setDisplayName(e.target.value)}
                         />
                         
                         <FormInput 
@@ -94,7 +77,7 @@ export default class signup extends Component {
                             name="email"
                             value={email}
                             placeholder="Email"
-                            onChange={this.handelChange}
+                            handelChange={e => setEmail(e.target.value)}
                         />
                         
                         <FormInput 
@@ -102,7 +85,7 @@ export default class signup extends Component {
                             name="password"
                             value={password}
                             placeholder="Password"
-                            onChange={this.handelChange}
+                            handelChange={e => setPassword(e.target.value)}
                         />
                         
                         <FormInput 
@@ -110,7 +93,7 @@ export default class signup extends Component {
                             name="confirmPassword"
                             value={confirmPassword}
                             placeholder="Confirm Password"
-                            onChange={this.handelChange}
+                            handelChange={e => setConfirmPassword(e.target.value)}
                         />
 
                         <Button type="submit">
@@ -120,5 +103,6 @@ export default class signup extends Component {
                 </div>
             </div>
         );
-    }
 }
+
+export default withRouter(Signup);
