@@ -1,14 +1,20 @@
 import React from 'react'
-import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
+import { useSelector } from 'react-redux'
 import Logo from '../assets/logo.png'
 import { auth } from '../firebase/utils.js'
 
-function header(props) {
 
-    const { currentUser } = props;
+const mapState = ({ user }) => ({
+    currentUser: user.currentUser
+});
+
+
+const Header = props => {
+
+    const { currentUser } = useSelector(mapState);
+    
     return (
-        <>
             <div className="relative bg-white">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6">
                     <div className="flex justify-between items-center border-b-2 border-gray-100 py-6 md:justify-start md:space-x-10">
@@ -155,7 +161,7 @@ function header(props) {
                         {currentUser && (
                             <>
                                 <Link to='/dashboard'>
-                                    <div className="whitespace-nowrap text-base font-normal text-gray-500 hover:text-gray-900 mr-5">
+                                    <div className="whitespace-nowrap text-base font-normal text-gray-500 hover:text-gray-900 mr-10">
                                     My Account
                                     </div>
                                 </Link>
@@ -304,16 +310,11 @@ function header(props) {
                     </div>
                 </div>
                 </div>
-        </>
     )
 };
 
-header.defaultProps = {
+Header.defaultProps = {
     currentUser: null
 };
 
-const mapStateToProps = ({ user }) => ({
-    currentUser: user.currentUser
-});
-
-export default connect(mapStateToProps, null)(header);
+export default Header;

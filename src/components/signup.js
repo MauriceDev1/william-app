@@ -1,16 +1,39 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { withRouter } from 'react-router-dom'
+import { signUpUser, restAllAuthForms } from '../redux/User/user.actions'
 import FormInput from '../components/forms/FormInput.js'
 import Button from '../components/forms/Button.js'
 
-import { auth, handelUserProfile } from '../firebase/utils.js'
+const mapState = ({ user }) => ({
+    signUpSuccess: user.signUpSuccess,
+    signUpError: user.signUpError
+});
 
 const Signup = props => {
+    const { signUpSuccess, signUpError } = useSelector(mapState);
+    const dispatch = useDispatch();
     const [displayName, setDisplayName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [errors, setErrors] = useState('');
+
+    useEffect(() => {
+        if(signUpSuccess) {
+            reset();
+            dispatch(restAllAuthForms());
+            props.history.push('/');
+        }
+
+    },[signUpSuccess]);
+
+    useEffect(() =>{
+        if(Array.isArray(signUpError) && signUpError.length > 0){
+            setErrors(signUpError);
+        }
+
+    },[signUpError]);
 
 
     const reset = () => {
@@ -21,27 +44,14 @@ const Signup = props => {
         setErrors([]);
     }
 
-    const handleFormSubmit = async event => {
+    const handleFormSubmit = event => {
         event.preventDefault();
-
-        if(password !== confirmPassword) {
-            const err = ['Password Dont\'t match'];
-            setErrors(err);
-            return;
-        }
-
-        try{
-
-           const { user } = await auth.createUserWithEmailAndPassword(email, password);
-
-           await handelUserProfile(user, { displayName });
-           reset();
-           props.history.push('/');
-
-        }catch (err) {
-            // console.log(err);
-        }
-
+        dispatch(signUpUser({
+            displayName,
+            email,
+            password,
+            confirmPassword,
+        }));
     }
 
         return (

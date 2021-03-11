@@ -1,6 +1,6 @@
 
 import React, { useEffect } from 'react'
-import { connect } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import {Route, Switch, Redirect} from 'react-router-dom'
 import { auth, handelUserProfile } from './firebase/utils.js'
 import { setCurrentUser } from './redux/User/user.actions'
@@ -22,8 +22,7 @@ import Dashboard from './pages/dashboard.js'
 
 
 const App = props => {
-
-  const { setCurrentUser, currentUser } = props;
+const dispatch = useDispatch();
 
   useEffect(() => {
     
@@ -32,14 +31,13 @@ const App = props => {
       if (userAuth) {
         const userRef = await handelUserProfile(userAuth);
         userRef.onSnapshot(snapshot => {
-          setCurrentUser({
+          dispatch(setCurrentUser({
             id: snapshot.id,
               ...snapshot.data()
-          });
+          }));
         })
       }
-
-      setCurrentUser(userAuth);
+      dispatch(setCurrentUser(userAuth));
     });
     
 
@@ -87,12 +85,4 @@ const App = props => {
   
 }
 
-const mapStateToProps = ({ user }) => ({
-  currentUser: user.currentUser
-});
-
-const mapDispatchToProps = dispatch => ({
-  setCurrentUser: user => dispatch(setCurrentUser(user))
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+export default App;
