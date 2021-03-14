@@ -1,18 +1,19 @@
 import React, { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { withRouter } from 'react-router-dom'
-import { signUpUser, restAllAuthForms } from '../redux/User/user.actions'
+import { useHistory } from 'react-router-dom'
+import { signUpUserStart } from '../redux/User/user.actions'
 import FormInput from '../components/forms/FormInput.js'
 import Button from '../components/forms/Button.js'
 
 const mapState = ({ user }) => ({
-    signUpSuccess: user.signUpSuccess,
-    signUpError: user.signUpError
+    currentUser: user.currentUser,
+    userError: user.userError
 });
 
 const Signup = props => {
-    const { signUpSuccess, signUpError } = useSelector(mapState);
     const dispatch = useDispatch();
+    const history = useHistory();
+    const { currentUser, userError } = useSelector(mapState);
     const [displayName, setDisplayName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -20,20 +21,19 @@ const Signup = props => {
     const [errors, setErrors] = useState('');
 
     useEffect(() => {
-        if(signUpSuccess) {
+        if(currentUser) {
             reset();
-            dispatch(restAllAuthForms());
-            props.history.push('/');
+            history.push('/');
         }
 
-    },[signUpSuccess]);
+    },[currentUser]);
 
     useEffect(() =>{
-        if(Array.isArray(signUpError) && signUpError.length > 0){
-            setErrors(signUpError);
+        if(Array.isArray(userError) && userError.length > 0){
+            setErrors(userError);
         }
 
-    },[signUpError]);
+    },[userError]);
 
 
     const reset = () => {
@@ -46,7 +46,7 @@ const Signup = props => {
 
     const handleFormSubmit = event => {
         event.preventDefault();
-        dispatch(signUpUser({
+        dispatch(signUpUserStart({
             displayName,
             email,
             password,
@@ -115,4 +115,4 @@ const Signup = props => {
         );
 }
 
-export default withRouter(Signup);
+export default Signup;

@@ -6,7 +6,7 @@ function mainLayout(props) {
     return (
         <div>
             <Header {...props}/>
-            <div className="main h-full">
+            <div className="main h-screen">
                 {props.children}
             </div>
             <Footer />

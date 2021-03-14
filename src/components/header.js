@@ -1,8 +1,8 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
+import { signOutUserStart } from '../redux/User/user.actions'
 import Logo from '../assets/logo.png'
-import { auth } from '../firebase/utils.js'
 
 
 const mapState = ({ user }) => ({
@@ -12,12 +12,17 @@ const mapState = ({ user }) => ({
 
 const Header = props => {
 
+    const dispatch = useDispatch();
     const { currentUser } = useSelector(mapState);
     
+    const signOut = () => {
+        dispatch(signOutUserStart());
+    };
+
     return (
-            <div className="relative bg-white">
+            <div className="relative bg-white border-b-2 border-gray-100">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6">
-                    <div className="flex justify-between items-center border-b-2 border-gray-100 py-6 md:justify-start md:space-x-10">
+                    <div className="flex justify-between items-center py-6 md:justify-start md:space-x-10">
                     <div className="flex justify-start lg:w-0 lg:flex-1">
                         <Link to="/">
                             <span className="sr-only">Workflow</span>
@@ -165,7 +170,7 @@ const Header = props => {
                                     My Account
                                     </div>
                                 </Link>
-                                <div className="whitespace-nowrap text-base font-normal text-gray-500 hover:text-gray-900 cursor-pointer" onClick={() => auth.signOut()}>
+                                <div className="whitespace-nowrap text-base font-normal text-gray-500 hover:text-gray-900 cursor-pointer" onClick={() => signOut()}>
                                 Logout
                                 </div>
                             </>
